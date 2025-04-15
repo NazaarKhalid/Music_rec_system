@@ -2,14 +2,21 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 db = SQLAlchemy()
-DB_NAME = "music_system.db"  # We'll change this to PostgreSQL later
 
 def create_app():
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = 'your-secret-key-here'
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'  # Temporary SQLite, will change to PostgreSQL
+    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+    
+    DB_PASSWORD = os.getenv('DATABASE_PASSWORD')
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://postgres:{DB_PASSWORD}@localhost:5432/music_recommendation'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    
     db.init_app(app)
 
     from .views import views
@@ -33,7 +40,6 @@ def create_app():
     return app
 
 def create_database(app):
-    if not path.exists('instance/' + DB_NAME):
-        with app.app_context():
-            db.create_all()
-        print('Created Database!')
+    with app.app_context():
+        db.create_all()
+        print('Created Database Tables!')
