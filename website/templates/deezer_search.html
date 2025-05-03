@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Deezer Search{% endblock %}
+{% block content %}
+<div class="container">
+    <h2>Search Deezer</h2>
+    <form method="POST" class="mb-4">
+        <input type="text" name="q" class="form-control mb-2" placeholder="Search for songs or artists..." value="{{ query }}">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+    {% if results %}
+        <div class="row">
+        {% for track in results %}
+            <div class="col-md-4 mb-3">
+                <div class="card bg-dark text-light">
+                    <img src="{{ track.album.cover_medium }}" class="card-img-top" alt="cover">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ track.title }}</h5>
+                        <p class="card-text">Artist: {{ track.artist.name }}</p>
+                        <p class="card-text">Album: {{ track.album.title }}</p>
+                        <a href="{{ track.link }}" target="_blank" class="btn btn-outline-info btn-sm">View on Deezer</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    {% elif query %}
+        <p>No results found.</p>
+    {% endif %}
+</div>
+{% endblock %}

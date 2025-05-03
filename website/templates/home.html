@@ -2,13 +2,54 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<h1 align="center">Music Recommendation System</h1>
 <div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <h2>Welcome, {{ user.first_name }}!</h2>
-            <!-- We'll add music recommendation features here later -->
+    <h1 class="my-4">Music Recommendation System</h1>
+    
+    <a href="{{ url_for('views.create_playlist') }}" class="btn btn-success mb-3">
+        Create New Playlist
+    </a>
+    <a href="{{ url_for('views.view_playlists') }}" class="btn btn-primary mb-3 ml-2">
+        View Playlists
+    </a>
+
+    <div class="row mb-4">
+        <div class="col">
+            <h3>Genres</h3>
+            <div class="d-flex flex-wrap">
+                {% for genre in genres %}
+                <button class="btn btn-outline-primary m-1">{{ genre.name }}</button>
+                {% endfor %}
+            </div>
         </div>
     </div>
+
+    <form method="GET" action="{{ url_for('views.search') }}" class="form-inline mb-4">
+        <input class="form-control mr-2" type="search" name="q" placeholder="Search for songs, artists, genres..." aria-label="Search" required>
+        <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
+    <a class="nav-item nav-link" href="{{ url_for('views.deezer_search') }}">Deezer Search</a>
+
+    <div class="row">
+        <div class="col">
+            <h3>Songs</h3>
+            <div class="list-group">
+                {% for song in songs %}
+                <div class="list-group-item py-3 px-4">
+                    <div class="d-flex w-100 justify-content-between align-items-center">
+                        <h5 class="mb-1">{{ song.title }}</h5>
+                        <small>
+                            {% if song.duration %}
+                                {{ song.duration // 60 }}:{{ '%02d' % (song.duration % 60) }}
+                            {% endif %}
+                        </small>
+                    </div>
+                    <p class="mb-1">Artist: <span class="text-info">{{ song.artist.name }}</span></p>
+                    <small>Genre: <span class="text-warning">{{ song.genre.name }}</span></small>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
 </div>
 {% endblock %}

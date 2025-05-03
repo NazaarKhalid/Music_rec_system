@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Your Playlists{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="my-4">Your Playlists</h2>
+    {% if playlists %}
+        <div class="list-group">
+            {% for playlist in playlists %}
+            <div class="list-group-item mb-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4>{{ playlist.name }}</h4>
+                    <form method="POST" action="{{ url_for('views.delete_playlist', playlist_id=playlist.id) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this playlist?');">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </div>
+                <ul>
+                    {% for ps in playlist.songs %}
+                    <li>{{ ps.song.title }} ({{ ps.song.artist.name }})</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>You have no playlists yet.</p>
+    {% endif %}
+    <a href="{{ url_for('views.home') }}" class="btn btn-secondary mt-3">Back to Home</a>
+</div>
+{% endblock %}
