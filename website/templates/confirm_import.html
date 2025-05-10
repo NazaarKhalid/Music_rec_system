@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Select Genre{% endblock %}
+{% block content %}
+<div class="container">
+    <h2>Import Song from Deezer</h2>
+    <form method="POST" action="{{ url_for('views.import_deezer_song') }}">
+        {% for key, value in song_data.items() %}
+            <input type="hidden" name="{{ key }}" value="{{ value }}">
+        {% endfor %}
+        <div class="form-group">
+            <label for="genre_id">Select Genre</label>
+            <select class="form-control" id="genre_id" name="genre_id" required>
+                {% for genre in genres %}
+                <option value="{{ genre.id }}">{{ genre.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success">Import Song</button>
+        <a href="{{ url_for('views.deezer_search') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

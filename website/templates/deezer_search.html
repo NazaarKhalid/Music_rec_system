@@ -18,6 +18,15 @@
                         <p class="card-text">Artist: {{ track.artist.name }}</p>
                         <p class="card-text">Album: {{ track.album.title }}</p>
                         <a href="{{ track.link }}" target="_blank" class="btn btn-outline-info btn-sm">View on Deezer</a>
+                        <form method="POST" action="{{ url_for('views.confirm_import_deezer_song') }}">
+                            <input type="hidden" name="deezer_id" value="{{ track.id }}">
+                            <input type="hidden" name="title" value="{{ track.title }}">
+                            <input type="hidden" name="artist" value="{{ track.artist.name }}">
+                            <input type="hidden" name="album" value="{{ track.album.title }}">
+                            <input type="hidden" name="image_url" value="{{ track.album.cover_medium }}">
+                            <input type="hidden" name="duration" value="{{ track.duration }}">
+                            <button type="submit" class="btn btn-success btn-sm mt-2">Import</button>
+                        </form>
                     </div>
                 </div>
             </div>

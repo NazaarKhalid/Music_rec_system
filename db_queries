@@ -1,1 +1,3 @@
 -- Add queries used inside postgres here
+
+ALTER TABLE songs ADD COLUMN image_url VARCHAR(500); --for using images

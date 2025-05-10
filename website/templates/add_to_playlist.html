@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Add Songs to Playlist{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Add Songs to Existing Playlist</h2>
+    <form method="GET" action="{{ url_for('views.add_to_playlist') }}" class="mb-3">
+        <div class="form-group">
+            <label for="playlistSelect">Select Playlist</label>
+            <select class="form-control" id="playlistSelect" name="playlist_id" onchange="this.form.submit()">
+                <option value="">-- Select Playlist --</option>
+                {% for playlist in playlists %}
+                <option value="{{ playlist.id }}" {% if selected_playlist and playlist.id == selected_playlist.id %}selected{% endif %}>{{ playlist.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {% if selected_playlist %}
+        <div class="form-group">
+            <label for="songSearch">Search Songs</label>
+            <input type="text" class="form-control mb-2" id="songSearch" name="q" placeholder="Type to search..." value="{{ query or '' }}">
+            <button type="submit" class="btn btn-outline-primary btn-sm mb-2">Search</button>
+        </div>
+        {% endif %}
+    </form>
+    {% if selected_playlist %}
+    <form method="POST">
+        <input type="hidden" name="playlist_id" value="{{ selected_playlist.id }}">
+        <div class="row">
+            {% for song in songs %}
+            <div class="col-md-4 col-sm-6 mb-4">
+                <div class="card h-100 bg-dark text-light" style="border-radius: 16px;">
+                    {% if song.image_url %}
+                        <img src="{{ song.image_url }}" class="card-img-top" alt="cover" style="height:180px; object-fit:cover; border-top-left-radius: 16px; border-top-right-radius: 16px;">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='default_cover.png') }}" class="card-img-top" alt="cover" style="height:180px; object-fit:cover; border-top-left-radius: 16px; border-top-right-radius: 16px;">
+                    {% endif %}
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ song.title }}</h5>
+                        <p class="card-text mb-1">Artist: <span class="text-info">{{ song.artist.name }}</span></p>
+                        <p class="card-text mb-1">Genre: <span class="text-warning">{{ song.genre.name }}</span></p>
+                        <p class="card-text mb-2">
+                            {% if song.duration %}
+                                <small>Duration: {{ song.duration // 60 }}:{{ '%02d' % (song.duration % 60) }}</small>
+                            {% endif %}
+                        </p>
+                        <div class="mt-auto">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="song_ids" value="{{ song.id }}" id="song{{ song.id }}">
+                                <label class="form-check-label" for="song{{ song.id }}">
+                                    Add to Playlist
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-primary">Add Selected Songs</button>
+        <a href="{{ url_for('views.home') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+    {% endif %}
+</div>
+{% endblock %}

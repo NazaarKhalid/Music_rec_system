@@ -26,6 +26,7 @@ class Song(db.Model):
     duration = db.Column(db.Integer)
     song_metadata = db.Column(db.JSON)
     created_at = db.Column(db.DateTime, default=func.now())
+    image_url = db.Column(db.String(500))
 
 class Artist(db.Model):
     __tablename__ = 'artists'

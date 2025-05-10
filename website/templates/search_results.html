@@ -1,19 +1,40 @@
 {% extends "base.html" %}
 {% block title %}Search Results{% endblock %}
+
 {% block content %}
 <div class="container">
-    <h2>Search Results for "{{ query }}"</h2>
+    <h2 class="my-4">Search Results for "<span class="text-primary">{{ query }}</span>"</h2>
+
     {% if results %}
-        <ul class="list-group">
+    <div class="row">
         {% for song in results %}
-            <li class="list-group-item">
-                <strong>{{ song.title }}</strong> by {{ song.artist.name }} ({{ song.genre.name }})
-            </li>
+        <div class="col-md-4 col-sm-6 mb-4">
+            <div class="card h-100 bg-dark text-light" style="border-radius: 16px;">
+                {% if song.image_url %}
+                <img src="{{ song.image_url }}" class="card-img-top" alt="cover"
+                    style="height:180px; object-fit:cover; border-top-left-radius: 16px; border-top-right-radius: 16px;">
+                {% else %}
+                <img src="{{ url_for('static', filename='default_cover.png') }}" class="card-img-top" alt="cover"
+                    style="height:180px; object-fit:cover; border-top-left-radius: 16px; border-top-right-radius: 16px;">
+                {% endif %}
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ song.title }}</h5>
+                    <p class="card-text mb-1">Artist: <span class="text-info">{{ song.artist.name }}</span></p>
+                    <p class="card-text mb-1">Genre: <span class="text-warning">{{ song.genre.name }}</span></p>
+                    {% if song.duration %}
+                    <small class="text-muted">Duration: {{ song.duration // 60 }}:{{ '%02d' % (song.duration % 60) }}</small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
         {% endfor %}
-        </ul>
+    </div>
     {% else %}
-        <p>No songs found.</p>
+    <div class="alert alert-warning mt-3" role="alert">
+        No songs found.
+    </div>
     {% endif %}
+
     <a href="{{ url_for('views.home') }}" class="btn btn-secondary mt-3">Back to Home</a>
 </div>
 {% endblock %}
