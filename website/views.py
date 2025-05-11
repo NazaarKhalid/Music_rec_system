@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify, flash, redirect, url_for
+from flask import Blueprint, render_template, request, jsonify, flash, redirect, url_for, current_app
 from flask_login import login_required, current_user
 from .models import Song, Artist, Genre, Playlist, PlaylistSong
 from . import db
@@ -140,7 +140,6 @@ def import_deezer_song():
             artist_id=artist.id,
             genre_id=genre_id,
             duration=duration,
-            song_metadata={"deezer_id": deezer_id, "album": album},
             image_url=image_url
         )
         db.session.add(song)
@@ -241,3 +240,5 @@ def get_playlist_recommendations(user_id, limit=10):
     else:
         recommendations = Song.query.limit(limit).all()
     return recommendations
+
+    
